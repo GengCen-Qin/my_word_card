@@ -1,0 +1,10 @@
+<main class="container">
+  <div class="header">
+    <h1>Words</h1>
+    <%= link_to "New word",
+                new_word_path,
+                class: "btn btn--primary" %>
+  </div>
+
+  <%= render @words %>
+</main>

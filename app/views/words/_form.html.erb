@@ -1,0 +1,10 @@
+<%= simple_form_for word, html: { class: "word form" } do |f| %>
+  <% if word.errors.any? %>
+    <div class="error-message">
+      <%= word.errors.full_messages.to_sentence.capitalize %>
+    </div>
+  <% end %>
+
+  <%= f.input :name, input_html: { autofocus: true } %>
+  <%= f.submit class: "btn btn--secondary" %>
+<% end %>

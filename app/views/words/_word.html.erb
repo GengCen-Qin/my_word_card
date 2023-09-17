@@ -1,0 +1,12 @@
+<div class="word">
+  <%= link_to word.name, word_path(word) %>
+  <div class="word__actions">
+    <%= button_to "Delete",
+                  word_path(word),
+                  method: :delete,
+                  class: "btn btn--light" %>
+    <%= link_to "Edit",
+                edit_word_path(word),
+                class: "btn btn--light" %>
+  </div>
+</div>

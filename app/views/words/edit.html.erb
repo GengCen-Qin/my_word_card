@@ -1,0 +1,9 @@
+<main class="container">
+  <%= link_to sanitize("&larr; Back to word"), word_path(@word) %>
+
+  <div class="header">
+    <h1>Edit word</h1>
+  </div>
+
+  <%= render "form", word: @word %>
+</main>

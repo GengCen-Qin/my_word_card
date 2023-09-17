@@ -1,0 +1,14 @@
+en:
+  simple_form:
+    placeholders: # 文本提示
+      word:
+        name: Name of your word
+    labels:  # 标签提示
+      word:
+        name: Name
+
+  helpers:
+    submit: # 按钮文本
+      word:
+        create: Create word # 如果为新的数据，显示创建
+        update: Update word # 如果为老的数据，显示修改

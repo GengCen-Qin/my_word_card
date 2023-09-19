@@ -1,5 +1,7 @@
 .word {
-    display: flex;
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: var(--space-s);
@@ -19,5 +21,15 @@
     flex: 0 0 auto;
     align-self: flex-start;
     gap: var(--space-xs);
+  }
+
+  &.sound {
+    all: initial;
+    color: pink;
+  }
+
+  &.explain {
+    all: initial;
+    display: block;
   }
 }

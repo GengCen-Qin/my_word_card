@@ -2,7 +2,7 @@ class WordsController < ApplicationController
   before_action :set_word, only: [:show, :edit, :update, :destroy]
 
   def index
-    @words = Word.all
+    @words = Word.ordered
   end
 
   def show
@@ -16,7 +16,9 @@ class WordsController < ApplicationController
     @word = Word.new(word_params)
 
     if @word.save
-      redirect_to words_path, notice: "word was successfully created."
+      respond_to do |format|
+        format.turbo_stream
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +37,11 @@ class WordsController < ApplicationController
 
   def destroy
     @word.destroy
-    redirect_to words_path, notice: "word was successfully destroyed."
+
+    respond_to do |format|
+      format.html { redirect_to words_path, notice: "Quote was successfully destroyed." }
+      format.turbo_stream
+    end
   end
 
   private

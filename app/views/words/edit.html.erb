@@ -5,5 +5,7 @@
     <h1>Edit word</h1>
   </div>
 
-  <%= render "form", word: @word %>
+  <%= turbo_frame_tag @word do %>
+    <%= render "form", word: @word %>
+  <% end %>
 </main>

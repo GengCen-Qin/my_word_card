@@ -5,5 +5,7 @@
     <h1>New word</h1>
   </div>
 
+  <%= turbo_frame_tag @word do %>
   <%= render "form", word: @word %>
+  <% end %>
 </main>

@@ -3,8 +3,13 @@
     <h1>Words</h1>
     <%= link_to "New word",
                 new_word_path,
+                data: { turbo_frame: dom_id(Word.new) },
                 class: "btn btn--primary" %>
   </div>
 
+  <%= turbo_frame_tag Word.new %>
+
+  <%= turbo_frame_tag "words" do %>
   <%= render @words %>
+  <% end %>
 </main>

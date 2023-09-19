@@ -2,17 +2,24 @@ require "application_system_test_case"
 
 class WordsTest < ApplicationSystemTestCase
   setup do
-    @word = words(:first)
+    @word = Word.ordered.first
   end
 
-  test "Create a new word" do
+  test "Showing a quote" do
+    visit words_path
+    click_link @word.name
+
+    assert_selector "h1", text: @word.name
+  end
+
+  test "Creating a new word" do
     visit words_path
     assert_selector "h1", text: "Words"
 
     click_on "New word"
-    assert_selector "h1", text: "New word"
-
     fill_in "Name", with: "Apple"
+
+    assert_selector "h1", text: "Words"
     click_on "Create word"
 
     assert_selector "h1", text: "Words"
@@ -24,9 +31,9 @@ class WordsTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Words"
 
     click_on "Edit", match: :first
-    assert_selector "h1", text: "Edit word"
-
     fill_in "Name", with: "Banana"
+
+    assert_selector "h1", text: "Words"
     click_on "Update word"
 
     assert_selector "h1", text: "Words"

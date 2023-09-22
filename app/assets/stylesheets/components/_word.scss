@@ -12,6 +12,8 @@
   margin-bottom: var(--space-m);
   padding: var(--space-xs);
 
+  position: relative;
+
   @include media(tabletAndUp) {
     padding: var(--space-xs) var(--space-m);
   }
@@ -23,13 +25,51 @@
     gap: var(--space-xs);
   }
 
-  &.sound {
-    all: initial;
-    color: pink;
+  &-sound {
+    font-size: var(--font-size-s);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-left: 10px;
   }
 
-  &.explain {
-    all: initial;
+  &-explain {
+    font-size: var(--font-size-s);
+    margin-top: 5px;
     display: block;
+  }
+  
+  &-example {
+    font-size: var(--font-size-s);
+    margin: 0;
+    padding: 0;
+    opacity: 80%;
+    padding: 5px 10px;
+    font-weight: 500;
+    display: none;
+  }
+
+  & > .toggle {
+    position: absolute;
+    top: 8px;
+    right: 40px;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  & > .toggle .fa-times {
+    display: none;
+  } 
+
+  &.active .word-example {
+    display: block;
+  }
+
+  &.active .toggle .fa-times {
+    display: block;
+  }
+
+  &.active .toggle .fa-chevron-down {
+    display: none;
   }
 }

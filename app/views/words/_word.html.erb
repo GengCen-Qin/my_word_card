@@ -1,19 +1,25 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
 <%= turbo_frame_tag word do %>
-  <div class="word">
+  <div class="word active">
     <div class="word_detail">
       <%= link_to word.name, word_path(word), data: { turbo_frame: "_top" } %>
-      <div class="word sound">/wɜːd $ wɜːrd/</div>
-      <div class="word explain">a single group of letters that are used together with a particular meaning</div>
+      <span class="word-sound">/wɜːd $ wɜːrd/</span>
+      <div class="word-explain">a single group of letters that are used together with a particular meaning</div>
+      <ul class="word-example">
+        <li>Write an essay of about five hundred words.</li>
+        <li>What does that word mean?</li>
+        <li>'Vater' is the German word for (=that means) 'father'.</li>
+        <li>Perhaps 'lucky' is not exactly the right word.</li>
+      </ul>
     </div>
-    <div class="word__actions">
-      <%= button_to "Delete",
-                    word_path(word),
-                    method: :delete,
-                    data: { turbo_frame: "_top" },
-                    class: "btn btn--light" %>
-      <%= link_to "Edit",
-                  edit_word_path(word),
-                  class: "btn btn--light" %>
-    </div>
+    <button 
+      class="toggle"
+      data-controller="toggles"
+      data-action="click->toggles#toggle"
+    >
+        <i class="fas fa-chevron-down"></i>
+        <i class="fas fa-times"></i>
+    </button>
   </div>
 <% end %>

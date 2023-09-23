@@ -1,0 +1,18 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-large);
+  padding: var(--space-l) var(--space-m);
+  margin-bottom: var(--space-xxl);
+  background-color: (var(--color-white));
+
+  & form input{
+    border: 1px solid gray;
+    outline-color: dodgerblue;
+    border-radius: 10rem;
+    font-size: 30px;
+    padding: 0.5em 3em 0.5em 1em;
+    max-width: 600px;
+  }
+}

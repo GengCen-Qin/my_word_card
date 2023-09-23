@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous"/>
+
+<header class="navbar" data-controller="search">
+  <%= form_tag('/word/search', method: :post, class: 'form') do %>
+    <%= text_field_tag :search, nil, id: 'search', placeholder: 'Search...', autocomplete: 'off' ,required: true %>
+    <%= button_tag type: :submit, class: 'btn' do %>
+      <i class="fas fa-search"></i>
+    <% end %>
+  <% end %>
+</header>

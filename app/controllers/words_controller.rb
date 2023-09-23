@@ -1,16 +1,27 @@
 require 'nokogiri'
 require 'open-uri'
+
 class WordsController < ApplicationController
   before_action :set_word, only: [:show, :edit, :update, :destroy]
 
   def search
     row_word = params[:search]
-    word = do_search(row_word)
-    p "word : #{word.nil?}"
-    if word.nil?
-      redirect_to words_path, notice: "单词找不到啊"
+    @word = do_search(row_word)
+    if @word.nil?
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词找不到啊" })
+        end
+      end
     else
-      redirect_to words_path, notice: "单词已经被成功添加" if word.save
+      if @word.save
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" }),
+                   turbo_stream: turbo_stream.prepend("flash", partial: "layouts/flash")
+          end
+        end
+      end
     end
   end
 
@@ -42,7 +53,7 @@ class WordsController < ApplicationController
 
   def update
     if @word.update(word_params)
-      redirect_to words_path, notice: "word was successfully updated."
+      redirect_to words_path, notice: "@word was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -98,9 +109,11 @@ class WordsController < ApplicationController
   end
 
   def check_is_wrong_word?(doc)
+    is_wrong_word = false
     doc.css('.search_title').each do |link|
-      return link.content.start_with?("Sorry, there are no results for")
+      # 如果提示Did you mean:，应该优化为给出一些待选选项
+      is_wrong_word = link.content.start_with?("Sorry, there are no results for") or link.content.start_with?("Did you mean:")
     end
-    false
+    is_wrong_word
   end
 end

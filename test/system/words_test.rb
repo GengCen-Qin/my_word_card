@@ -47,4 +47,8 @@ class WordsTest < ApplicationSystemTestCase
     click_on "Delete", match: :first
     assert_no_text @word.name
   end
+
+  test"searching a word" do
+
+  end
 end

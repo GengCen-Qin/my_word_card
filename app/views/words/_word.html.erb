@@ -1,25 +1,24 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous"/>
 
 <%= turbo_frame_tag word do %>
-  <div class="word active">
+  <div class="word">
     <div class="word_detail">
       <%= link_to word.name, word_path(word), data: { turbo_frame: "_top" } %>
-      <span class="word-sound">/wɜːd $ wɜːrd/</span>
-      <div class="word-explain">a single group of letters that are used together with a particular meaning</div>
+      <span class="word-sound"><%= word.sound %></span>
+      <div class="word-explain"><%= word.explain %></div>
       <ul class="word-example">
-        <li>Write an essay of about five hundred words.</li>
-        <li>What does that word mean?</li>
-        <li>'Vater' is the German word for (=that means) 'father'.</li>
-        <li>Perhaps 'lucky' is not exactly the right word.</li>
+        <% word.example.split("#").each do |emp| %>
+          <li> <%= emp %> </li>
+        <% end %>
       </ul>
     </div>
-    <button 
+    <button
       class="toggle"
       data-controller="toggles"
       data-action="click->toggles#toggle"
     >
-        <i class="fas fa-chevron-down"></i>
-        <i class="fas fa-times"></i>
+      <i class="fas fa-chevron-down"></i>
+      <i class="fas fa-times"></i>
     </button>
   </div>
 <% end %>

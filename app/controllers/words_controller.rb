@@ -1,11 +1,8 @@
 require 'nokogiri'
 require 'open-uri'
-
 class WordsController < ApplicationController
-  before_action :set_word, only: [:show, :edit, :update, :destroy]
-
   def search
-    row_word = params[:search]
+    row_word = params[:search].to_s.downcase
     @word = do_search(row_word)
     if @word.nil?
       respond_to do |format|
@@ -17,48 +14,17 @@ class WordsController < ApplicationController
       if @word.save
         respond_to do |format|
           format.turbo_stream do
-            render turbo_stream: turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" }),
-                   turbo_stream: turbo_stream.prepend("flash", partial: "layouts/flash")
+            render turbo_stream: [turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" }),turbo_stream.prepend("flash", partial: "layouts/flash")]
           end
         end
       end
     end
   end
-
   def index
     @words = Word.ordered
   end
-
   def show
   end
-
-  def new
-    @word = Word.new
-  end
-
-  def create
-    @word = Word.new(word_params)
-
-    if @word.save
-      respond_to do |format|
-        format.turbo_stream
-      end
-    else
-      render :new, status: :unprocessable_entity
-    end
-  end
-
-  def edit
-  end
-
-  def update
-    if @word.update(word_params)
-      redirect_to words_path, notice: "@word was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
   def destroy
     @word.destroy
 
@@ -69,11 +35,6 @@ class WordsController < ApplicationController
   end
 
   private
-
-  def set_word
-    @word = Word.find(params[:id])
-  end
-
   def word_params
     params.require(:word).permit(:name, :sound, :explain, :example)
   end
@@ -112,7 +73,7 @@ class WordsController < ApplicationController
     is_wrong_word = false
     doc.css('.search_title').each do |link|
       # 如果提示Did you mean:，应该优化为给出一些待选选项
-      is_wrong_word = link.content.start_with?("Sorry, there are no results for") or link.content.start_with?("Did you mean:")
+      is_wrong_word = link.content.start_with?("Sorry, there are no results for") || link.content.start_with?("Did you mean:")
     end
     is_wrong_word
   end

@@ -129,6 +129,7 @@
         <option value="resource" />
         <option value="scaffold" />
         <option value="scaffold_controller" />
+        <option value="simple_form:install" />
         <option value="stimulus" />
         <option value="system_test" />
         <option value="task" />
@@ -159,6 +160,7 @@
         <option value="resource" />
         <option value="scaffold" />
         <option value="scaffold_controller" />
+        <option value="simple_form:install" />
         <option value="stimulus" />
         <option value="system_test" />
         <option value="task" />

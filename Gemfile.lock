@@ -224,6 +224,7 @@ DEPENDENCIES
   debug
   jbuilder
   jsbundling-rails
+  nokogiri
   puma (~> 5.0)
   rails (~> 7.0.8)
   redis (~> 4.0)

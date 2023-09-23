@@ -6,6 +6,9 @@
   <% end %>
 
   <%= f.input :name, input_html: { autofocus: true } %>
-  <%= link_to "取消", words_path, class: "btn btn--light" %>
+  <%= f.input :sound, input_html: { autofocus: true } %>
+  <%= f.input :explain, input_html: { autofocus: true } %>
+  <%= f.input :example, input_html: { autofocus: true } %>
+
   <%= f.submit class: "btn btn--secondary" %>
 <% end %>

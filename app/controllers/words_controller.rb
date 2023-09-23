@@ -5,7 +5,6 @@ class WordsController < ApplicationController
 
   def search
     row_word = params[:search]
-
     word = do_search(row_word)
     p "word : #{word.nil?}"
     if word.nil?

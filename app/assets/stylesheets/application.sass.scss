@@ -5,6 +5,7 @@
 // Configuration
 @import "config/variables";
 @import "config/reset";
+@import "config/animations";
 
 // Components
 @import "components/btn";
@@ -14,6 +15,7 @@
 @import "components/word";
 @import "components/navbar";
 @import "components/turbo_progress_bar";
+@import "components/flash";
 
 // Layouts
 @import "layouts/container";

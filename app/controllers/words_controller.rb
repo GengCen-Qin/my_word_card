@@ -1,30 +1,51 @@
 require 'nokogiri'
 require 'open-uri'
+
 class WordsController < ApplicationController
   def search
     row_word = params[:search].to_s.downcase
+    @flash_message = ""
+
+    @word = Word.find_by_name(row_word)
+    if @word
+      @flash_message = "单词已经存在"
+      @word.update(updated_at: DateTime.now)
+      return respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = @flash_message }),
+            turbo_stream.prepend("flash", partial: "layouts/flash")
+          ]
+        end
+      end
+    end
+
     @word = do_search(row_word)
-    if @word.nil?
+    if @word
+      if @word.save
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: [turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" }),
+                                  turbo_stream.prepend("flash", partial: "layouts/flash")]
+          end
+        end
+      end
+    else
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词找不到啊" })
         end
       end
-    else
-      if @word.save
-        respond_to do |format|
-          format.turbo_stream do
-            render turbo_stream: [turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" }),turbo_stream.prepend("flash", partial: "layouts/flash")]
-          end
-        end
-      end
     end
   end
+
   def index
     @words = Word.ordered
   end
+
   def show
   end
+
   def destroy
     @word.destroy
 
@@ -35,6 +56,7 @@ class WordsController < ApplicationController
   end
 
   private
+
   def word_params
     params.require(:word).permit(:name, :sound, :explain, :example)
   end

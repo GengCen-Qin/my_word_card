@@ -4,19 +4,12 @@ require 'open-uri'
 class WordsController < ApplicationController
   def search
     row_word = params[:search].to_s.downcase
-    @flash_message = ""
 
     @word = Word.find_by_name(row_word)
     if @word
-      @flash_message = "单词已经存在"
       @word.update(updated_at: DateTime.now)
       return respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = @flash_message }),
-            turbo_stream.prepend("flash", partial: "layouts/flash")
-          ]
-        end
+        format.turbo_stream
       end
     end
 
@@ -25,8 +18,8 @@ class WordsController < ApplicationController
       if @word.save
         respond_to do |format|
           format.turbo_stream do
-            render turbo_stream: [turbo_stream.prepend("words", @word, locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" }),
-                                  turbo_stream.prepend("flash", partial: "layouts/flash")]
+            render turbo_stream: [turbo_stream.prepend("words", @word),
+                                  turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" })]
           end
         end
       end

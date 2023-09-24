@@ -2,22 +2,26 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 
-const boxes = document.querySelectorAll(".word")
-
 window.addEventListener('scroll', checkBoxes)
 
 checkBoxes()
 
 function checkBoxes() {
+    const boxes = document.querySelectorAll(".word")
     const triggerBottom = window.innerHeight / 6 * 5
-
     boxes.forEach(box => {
         const boxTop = box.getBoundingClientRect().top
 
-        if(boxTop < triggerBottom) {
+        if (boxTop < triggerBottom) {
             box.classList.add('show')
         } else {
             box.classList.remove('show')
         }
     })
 }
+
+document.addEventListener('turbo:before-stream-render', function(event) {
+    event.preventDefault();
+    event.detail.newStream.performAction();
+    checkBoxes()
+})

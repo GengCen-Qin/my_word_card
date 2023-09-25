@@ -20,8 +20,14 @@ function checkBoxes() {
     })
 }
 
+function resetInput() {
+    const input = document.getElementById("search")
+    input.value = ""
+}
+
 document.addEventListener('turbo:before-stream-render', function(event) {
     event.preventDefault();
     event.detail.newStream.performAction();
     checkBoxes()
+    resetInput()
 })

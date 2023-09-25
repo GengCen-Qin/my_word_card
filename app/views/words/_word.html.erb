@@ -1,12 +1,9 @@
 <%= turbo_frame_tag word do %>
   <div class="word__container">
     <div class="word">
-    <span class="word__button"
-          data-controller="checks"
-          data-action="click->checks#check"
-          data-url="<%= url_for(controller: 'words', action: 'destroy', id: @word.id) %>">
-      <i class="fa fa-check"></i>
-      </span>
+      <%= button_to word_path(word), method: :delete, class: "word__button" do %>
+        <i class="fa fa-check"></i>
+      <% end %>
 
       <div class="word_detail">
         <span class="word-name"><%= word.name %></span>

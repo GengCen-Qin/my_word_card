@@ -40,15 +40,21 @@ class WordsController < ApplicationController
   end
 
   def destroy
+    set_word
     @word.destroy
-
     respond_to do |format|
-      format.html { redirect_to words_path, notice: "Quote was successfully destroyed." }
-      format.turbo_stream
+      format.turbo_stream do
+        render turbo_stream: [turbo_stream.remove(@word),
+                              turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词成功删除！！！" })]
+      end
     end
   end
 
   private
+
+  def set_word
+    @word = Word.find(params[:id])
+  end
 
   def word_params
     params.require(:word).permit(:name, :sound, :explain, :example)

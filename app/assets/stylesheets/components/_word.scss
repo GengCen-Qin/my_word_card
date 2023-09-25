@@ -2,7 +2,6 @@
   font-size: var(--font-size-xl);
   font-weight: bold;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: var(--space-s);
 
@@ -30,6 +29,18 @@
     flex: 0 0 auto;
     align-self: flex-start;
     gap: var(--space-xs);
+  }
+
+  &-name {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 200ms;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--color-primary-rotate);
+    }
   }
 
   &-sound {
@@ -83,5 +94,17 @@
 
   &.show {
     transform: translateX(0);
+  }
+
+  &__button {
+    all: initial;
+    color: transparent;
+    cursor: pointer;
+    margin-right: 15px;
+    font-size: 30px;
+  }
+
+  &__button:hover {
+    color: red;
   }
 }

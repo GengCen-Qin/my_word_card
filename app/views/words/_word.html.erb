@@ -1,28 +1,28 @@
 <%= turbo_frame_tag word do %>
-  <div class="word__container">
-    <div class="word">
-      <%= button_to word_path(word), method: :delete, class: "word__button" do %>
-        <i class="fa fa-check"></i>
-      <% end %>
+  <div class="word">
+    <%= button_to word_path(word), method: :delete, class: "word__button",
+                  data: { controller: "removals", action: "click->removals#inertTmpNode" } do %>
+      <i class="fa fa-check"></i>
+    <% end %>
 
-      <div class="word_detail">
-        <span class="word-name"><%= word.name %></span>
-        <span class="word-sound"><%= word.sound %></span>
-        <div class="word-explain"><%= word.explain %></div>
-        <ul class="word-example">
-          <% word.example.split("#").each do |emp| %>
-            <li> <%= emp %> </li>
-          <% end %>
-        </ul>
-      </div>
-      <button
-        class="toggle"
-        data-controller="toggles"
-        data-action="click->toggles#toggle"
-      >
-        <i class="fas fa-chevron-down"></i>
-        <i class="fas fa-times"></i>
-      </button>
+    <div class="word_detail">
+      <span class="word-name"><%= word.name %></span>
+      <span class="word-sound"><%= word.sound %></span>
+      <div class="word-explain"><%= word.explain %></div>
+      <ul class="word-example">
+        <% word.example.split("#").each do |emp| %>
+          <li> <%= emp %> </li>
+        <% end %>
+      </ul>
     </div>
+
+    <button
+      class="toggle"
+      data-controller="toggles"
+      data-action="click->toggles#toggle"
+    >
+      <i class="fas fa-chevron-down"></i>
+      <i class="fas fa-times"></i>
+    </button>
   </div>
 <% end %>

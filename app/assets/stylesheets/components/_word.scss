@@ -107,4 +107,9 @@
   &__button:hover {
     color: red;
   }
+
+  &__tmp__remove {
+    height: 0 !important;
+    transition: height 1s ease;
+  }
 }

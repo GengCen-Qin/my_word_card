@@ -1,7 +1,5 @@
 first:
-  name: Apple
-Second:
-  name: Banana
-Third:
-  name: Pink
-  
+  name: apple
+  sound: /ˈæpəl/
+  explain: a hard round fruit that has red, light green, or yellow skin and is white inside
+  example: apple pie

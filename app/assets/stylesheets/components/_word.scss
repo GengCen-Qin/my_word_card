@@ -14,7 +14,7 @@
   position: relative;
 
   transform: translateX(400%);
-  transition: transform 1s ease;
+  transition: transform 1s ease , height 1s ease;
 
   @include media(tabletAndUp) {
     padding: var(--space-xs) var(--space-m);
@@ -106,10 +106,5 @@
 
   &__button:hover {
     color: red;
-  }
-
-  &__tmp__remove {
-    height: 0 !important;
-    transition: height 1s ease;
   }
 }

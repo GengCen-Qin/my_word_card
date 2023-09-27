@@ -6,19 +6,33 @@ export default class extends Controller {
         this.element.remove()
     }
 
-    inertTmpNode() {
-        const targetWord = this.element.parentNode.parentNode.parentNode
-        const words = targetWord.parentNode
-        const tmpWord = document.createElement("div")
-        const height = this.element.parentNode.parentElement.scrollHeight
-        tmpWord.style["height"] = height + "px"
-        tmpWord.id = "tmp_word"
-        tmpWord.setAttribute("data-controller", "removals");
-        tmpWord.setAttribute("data-action", "transitionend->removals#removeTmpNode");
-        words.insertBefore(tmpWord, targetWord)
-    }
+    fade(event) {
+        event.preventDefault()
+        const targetElement = this.element.parentNode.parentElement
+        targetElement.style.height = getComputedStyle(targetElement).height
+        targetElement.style.visibility = "hidden";
+        targetElement.style.margin = 0;
+        targetElement.style.padding = 0;
+        targetElement.addEventListener("transitionend", async () => {
+            let form = this.element.parentElement;
+            const formData = new FormData(form);
+            try {
+                const response = await fetch(form.getAttribute("action"), {
+                    method: form.getAttribute("method"),
+                    body: formData
+                });
 
-    removeTmpNode() {
-        this.element.remove();
+                // 将响应转换为Turbo Stream对象
+                const turboStream = await response.text();
+
+                // 处理Turbo Stream响应
+                Turbo.renderStreamMessage(turboStream);
+            } catch (error) {
+                console.log("表单提交失败:", error);
+            }
+        })
+        setTimeout(() => {
+            targetElement.style["height"] = 0;
+        }, 0);
     }
 }

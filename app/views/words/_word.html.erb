@@ -1,7 +1,7 @@
 <%= turbo_frame_tag word do %>
   <div class="word">
     <%= button_to word_path(word), method: :delete, class: "word__button",
-                  data: { controller: "removals", action: "click->removals#inertTmpNode" } do %>
+                  data: { controller: "removals", action: "click->removals#fade" } do %>
       <i class="fa fa-check"></i>
     <% end %>
 

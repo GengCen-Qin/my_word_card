@@ -1,9 +1,9 @@
 <%= turbo_frame_tag word do %>
   <div class="word" data-controller="word">
-    <audio id="<%= "#{word.name}_sound_link" %>" src="<%= word.word_sound_link %>" ></audio>
+    <audio id="<%= "#{word.name}_sound_link" %>" src="<%= word.word_sound_link %>"></audio>
 
     <%= button_to word_path(word), method: :delete, class: "word__button",
-                  data: { controller: "removals", action: "click->removals#fade" } do %>
+                  data: { controller: "word" ,action: "click->word#fade" } do %>
       <i class="fa fa-check"></i>
     <% end %>
 

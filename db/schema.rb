@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_23_035928) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_29_102448) do
   create_table "words", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_035928) do
     t.string "sound"
     t.string "explain"
     t.text "example"
+    t.string "word_sound_link"
   end
 
 end

@@ -7,7 +7,6 @@ export default class extends Controller {
     }
 
     blurring(target) {
-        console.log("blur")
         this.load++
         if (this.load > 10) {
             clearInterval(this.int)

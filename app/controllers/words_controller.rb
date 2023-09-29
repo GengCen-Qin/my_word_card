@@ -31,7 +31,6 @@ class WordsController < ApplicationController
       end
     end
   end
-
   def index
     @words = Word.ordered
   end
@@ -67,6 +66,11 @@ class WordsController < ApplicationController
     word = Word.new
     word.name = content.to_s.strip.chomp
     doc.css('.dictlink .ldoceEntry').each do |link|
+      doc.css(".Head .speaker").each do |word_sound_mp3|
+        word.word_sound_link = word_sound_mp3["data-src-mp3"]
+        break
+      end
+
       doc.css(".Head .PronCodes").each do |word_sound|
         # 音标
         word.sound = word_sound.content

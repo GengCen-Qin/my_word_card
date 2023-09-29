@@ -49,6 +49,10 @@
     color: var(--color-text-muted);
     margin-left: 10px;
   }
+  &-sound:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
 
   &-explain {
     font-size: var(--font-size-s);

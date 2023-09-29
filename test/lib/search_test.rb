@@ -2,6 +2,8 @@
 require 'minitest/autorun'
 require 'nokogiri'
 require 'open-uri'
+require "application_system_test_case"
+require_relative '../../app/models/word'
 
 class SearchTest < Minitest::Test
   def test_search_word
@@ -9,6 +11,10 @@ class SearchTest < Minitest::Test
     doc = Nokogiri::HTML(content)
     word = Word.new
     doc.css('.dictlink .ldoceEntry').each do |link|
+      doc.css(".Head .speaker").each do |word_sound_mp3|
+        p "喇叭 ： #{word_sound_mp3["data-src-mp3"]}"
+      end
+
       doc.css(".Head .PronCodes").each do |word_sound|
         # 音标
         word.sound = word_sound.content

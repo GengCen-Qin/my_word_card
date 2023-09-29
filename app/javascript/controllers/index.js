@@ -9,3 +9,6 @@ application.register("removals", RemovalsController)
 
 import TogglesController from "./toggles_controller"
 application.register("toggles", TogglesController)
+
+import WordController from "./word_controller"
+application.register("word", WordController)

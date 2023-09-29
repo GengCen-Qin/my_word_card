@@ -1,6 +1,7 @@
 <main class="container" style="overflow-x: hidden">
   <div class="header">
     <h1>My Words</h1>
+    <div id="openLayer" class="btn btn--primary" data-controller="toggles">AI生成</div>
   </div>
 
   <%= turbo_frame_tag Word.new %>
@@ -8,4 +9,18 @@
   <%= turbo_frame_tag "words" do %>
     <%= render @words %>
   <% end %>
+
+  <div id="layer" class="layer">
+    <div id="layer-container" class="layer-container">
+      <div class="layer-title">
+        <h3>AI - MAKE - SENTENCE</h3>
+      </div>
+
+      <div class="layer-content">
+        <div id="joke" class="joke">// Joke goes here</div>
+      </div>
+
+      <button id="closeLayer" class="layer-button">Get Another Joke</button>
+    </div>
+  </div>
 </main>

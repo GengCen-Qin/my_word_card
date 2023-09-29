@@ -8,7 +8,7 @@
     <% end %>
 
     <div class="word_detail">
-      <span class="word-name"><%= word.name %></span>
+      <a class="word-name" href="https://www.ldoceonline.com/dictionary/<%= word.name %>" target="_blank"><%= word.name %></a>
       <span class="word-sound" data-action="click->word#sound"><%= word.sound %></span>
       <div class="word-explain"><%= word.explain %></div>
       <ul class="word-example">

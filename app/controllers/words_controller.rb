@@ -31,6 +31,7 @@ class WordsController < ApplicationController
       end
     end
   end
+
   def index
     @words = Word.ordered
   end
@@ -47,6 +48,10 @@ class WordsController < ApplicationController
                               turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词成功删除！！！" })]
       end
     end
+  end
+
+  def makeMessageByAI
+    render plain: getAIMessage
   end
 
   private
@@ -101,5 +106,21 @@ class WordsController < ApplicationController
       is_wrong_word = link.content.start_with?("Sorry, there are no results for") || link.content.start_with?("Did you mean:")
     end
     is_wrong_word
+  end
+
+  def getAIMessage
+    word_names = Word.pluck(:name)
+    prompt = "I will provide you with a few words and ask you to use them to generate a short, easily understandable article \
+              because I'm curious about how these words are used in real-life situations.. It would be great if the article could \
+              be limited to around 100 words.
+              Words: #{word_names}"
+    client = OpenAI::Client.new
+    response = client.chat(
+      parameters: {
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.5,
+      })
+    response.dig("choices", 0, "message", "content")
   end
 end

@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   resources :words, only: [:index, :destroy]
 
   post '/word/search', to: 'words#search'
+
+  get '/word/makeMessageByAI', to: "words#makeMessageByAI"
 end

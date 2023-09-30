@@ -1,2 +1,2 @@
 <%= turbo_stream.prepend "words", @word %>
-<%= turbo_stream.prepend "flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词已经存在" } %>
+<%= turbo_stream.prepend "flash", partial: "layouts/flash" %>

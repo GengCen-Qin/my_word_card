@@ -1,4 +1,6 @@
 <main class="container" style="overflow-x: hidden">
+  <%= turbo_stream_from "words" %>
+
   <div class="header">
     <h1>My Words</h1>
     <div id="openLayer" class="btn btn--primary" data-controller="toggles" data-action="click->toggles#aiMakeMessage">AI生成</div>
@@ -18,7 +20,9 @@
 
       <div id="layerContent" class="layer-content"></div>
 
-      <button id="closeLayer" class="layer-button" data-controller="toggles" data-action="click->toggles#closeLayer">Get Another Joke</button>
+      <button id="closeLayer" class="layer-button" data-controller="toggles" data-action="click->toggles#closeLayer">Get
+        Another Joke
+      </button>
     </div>
   </div>
 </main>

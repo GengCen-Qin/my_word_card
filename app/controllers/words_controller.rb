@@ -2,6 +2,8 @@ require 'nokogiri'
 require 'open-uri'
 
 class WordsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def search
     row_word = params[:search].to_s.downcase
 
@@ -17,10 +19,7 @@ class WordsController < ApplicationController
     if @word
       if @word.save
         respond_to do |format|
-          format.turbo_stream do
-            render turbo_stream: [turbo_stream.prepend("words", @word),
-                                  turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词已经被成功加入！！！" })]
-          end
+          format.turbo_stream { flash.now[:notice] = "单词被成功创建了！！！" }
         end
       end
     else

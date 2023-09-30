@@ -25,14 +25,8 @@ function resetInput() {
     input.value = ""
 }
 
-function removeTmpWordAnimation() {
-    const tmpWord = document.getElementById("tmp_word")
-    if (tmpWord) tmpWord.classList.add("word__tmp__remove")
-}
-
 document.addEventListener('turbo:before-stream-render', function (event) {
-    removeTmpWordAnimation()
-    event.preventDefault();
+    event.preventDefault()
     event.detail.newStream.performAction();
     checkBoxes()
     resetInput()

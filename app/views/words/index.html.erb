@@ -20,9 +20,15 @@
 
       <div id="layerContent" class="layer-content"></div>
 
-      <button id="closeLayer" class="layer-button" data-controller="toggles" data-action="click->toggles#closeLayer">Get
-        Another Joke
-      </button>
+      <div style="display: flex; justify-content: space-between">
+        <button class="layer-button" data-controller="toggles" data-action="click->toggles#aiMakeMessage">
+          GetMore
+        </button>
+
+        <button id="closeLayer" class="layer-button" data-controller="toggles" data-action="click->toggles#closeLayer">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 </main>

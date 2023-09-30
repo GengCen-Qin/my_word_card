@@ -18,6 +18,5 @@ module MyWordCard
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    config.proxy = 'http://127.0.0.1:7890'
   end
 end

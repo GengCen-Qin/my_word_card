@@ -50,7 +50,7 @@ class WordsController < ApplicationController
   end
 
   def makeMessageByAI
-    render plain: getAIMessage
+    render plain: get_ai_message
   end
 
   private
@@ -107,19 +107,25 @@ class WordsController < ApplicationController
     is_wrong_word
   end
 
-  def getAIMessage
+  def get_ai_message
     word_names = Word.pluck(:name)
     prompt = "I will provide you with a few words and ask you to use them to generate a short, easily understandable article \
               because I'm curious about how these words are used in real-life situations.. It would be great if the article could \
               be limited to around 100 words.
               Words: #{word_names}"
     client = OpenAI::Client.new
-    response = client.chat(
-      parameters: {
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.5,
-      })
-    response.dig("choices", 0, "message", "content")
+    result = "AI暂时无法访问"
+    begin
+      response = client.chat(
+        parameters: {
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.5,
+        })
+      result = response.dig("choices", 0, "message", "content")
+    rescue => e
+      logger.error("openAi request fail: #{e}")
+    end
+    result
   end
 end

@@ -28,11 +28,13 @@
   }
 
   &-content {
-    font-size: 30px;
+    font-size: var(--font-size-m);
     letter-spacing: 1px;
-    line-height: 40px;
-    margin: 50px auto;
+    line-height: 25px;
+    margin: 20px auto;
     max-width: 600px;
+    text-align: left;
+    text-indent: 2em;
   }
 
   &-button {

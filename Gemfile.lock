@@ -100,6 +100,7 @@ GEM
     faraday-net_http (3.0.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    httpclient (2.8.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
@@ -239,6 +240,7 @@ DEPENDENCIES
   capybara
   cssbundling-rails
   debug
+  httpclient
   jbuilder
   jsbundling-rails
   nokogiri

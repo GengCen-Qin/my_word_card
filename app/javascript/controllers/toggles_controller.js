@@ -7,11 +7,11 @@ export default class extends Controller {
     }
 
     async aiMakeMessage() {
-        const response = await fetch("/word/makeMessageByAI", {method: "GET",});
-        const aiMessage = await response.text();
         const layerContent = document.getElementById("layerContent");
-        layerContent.innerText = aiMessage
+        layerContent.innerText = "加载中。。。"
         document.getElementById("layer").style.display = "flex"
+        const response = await fetch("/word/makeMessageByAI", {method: "GET",});
+        layerContent.innerText = await response.text()
     }
 
     closeLayer() {

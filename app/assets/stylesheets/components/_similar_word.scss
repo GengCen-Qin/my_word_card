@@ -1,0 +1,21 @@
+.similar_word {
+  border: 0;
+  list-style: none;
+
+  background-color: #f0f8ff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-small);
+  margin-bottom: var(--space-m);
+  padding: var(--space-xs);
+  font-weight: bold;
+  font-size: var(--font-size-xl);
+
+  &-content {
+    border: 0;
+    cursor: pointer;
+    background-color: transparent;
+  }
+  &-content:hover {
+    text-decoration:underline
+  }
+}

@@ -1,8 +1,15 @@
 # README
-
 ## 目标：单词卡片
+> 页面展示
+
+<img src="public/index-example.png" alt="img.png" style="zoom:30%;" />
+
+
+
+<img src="public/ai-sentence.png" alt="img.png" style="zoom:33%;" />
 
 > 需求：
+
 - 可以检索单词，并提供英英翻译
 - 单词输出错误，提供类似的单词提示
 - 通过AI，使用检索过的单词生成一篇小短文，帮助学习如何在实际中使用这些单词

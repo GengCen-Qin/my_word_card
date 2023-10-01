@@ -1,5 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
+require_relative '../exceptions/guess_other_word_error'
+require_relative '../exceptions/not_found_word_error'
 
 class WordsController < ApplicationController
   skip_before_action :verify_authenticity_token
@@ -11,27 +13,41 @@ class WordsController < ApplicationController
     if @word
       @word.update(updated_at: DateTime.now)
       return respond_to do |format|
-        format.turbo_stream
+        format.turbo_stream { flash.now[:notice] = "移动到顶部啦！！！" }
       end
     end
 
-    @word = do_search(row_word)
-    if @word
+    begin
+      @word = do_search(row_word)
       if @word.save
         respond_to do |format|
           format.turbo_stream { flash.now[:notice] = "单词被成功创建了！！！" }
         end
       end
-    else
+    rescue NotFoundWordError
+      respond_to do |format|
+        format.turbo_stream { flash.now[:notice] = "单词找不到啊！！！" }
+      end
+    rescue GuessOtherWordError => e
+      @similar_words = []
+      e.doc.css(".didyoumean li a").each do |word|
+        @similar_words << word.content.to_s.strip.chomp
+      end
+      flash[:similar_words] = @similar_words
+      flash.now[:notice] = "你是否查询下列单词！！！"
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.prepend("flash", partial: "layouts/flash", locals: { message: flash.now[:notice] = "单词找不到啊" })
+          render turbo_stream: [
+            turbo_stream.prepend("flash", partial: "layouts/flash"),
+            turbo_stream.update("similar_list", partial: "words/similar_list", locals: { words: @similar_words })
+          ]
         end
       end
     end
   end
 
   def index
+    @similar_words = flash[:similar_words]
     @words = Word.ordered
   end
 
@@ -56,52 +72,54 @@ class WordsController < ApplicationController
     @word = Word.find(params[:id])
   end
 
-  def word_params
-    params.require(:word).permit(:name, :sound, :explain, :example)
-  end
-
   def do_search(content)
     body = URI.open("https://www.ldoceonline.com/dictionary/#{content.to_s.strip.chomp}")&.read
     doc = Nokogiri::HTML(body)
-    return nil if check_is_wrong_word?(doc)
-    word = Word.new
-    word.name = content.to_s.strip.chomp
-    doc.css('.dictlink .ldoceEntry').each do |link|
-      doc.css(".Head .speaker").each do |word_sound_mp3|
-        word.word_sound_link = word_sound_mp3["data-src-mp3"]
+    case check_word_status(doc)
+    when :not_found
+      raise(NotFoundWordError)
+    when :guess_other
+      raise(GuessOtherWordError.new(doc))
+    else
+      @word = Word.new
+      @word.name = content.to_s.strip.chomp
+      doc.css('.dictlink .ldoceEntry').each do |link|
+        doc.css(".Head .speaker").each do |word_sound_mp3|
+          @word.word_sound_link = word_sound_mp3["data-src-mp3"]
+          break
+        end
+
+        doc.css(".Head .PronCodes").each do |word_sound|
+          # 音标
+          @word.sound = word_sound.content
+          break
+        end
+
+        doc.css(".Sense .DEF").each do |word_explain|
+          # 描述
+          @word.explain = word_explain.content
+          break
+        end
+
+        examples = []
+        doc.css(".Sense .EXAMPLE").each do |word_explain|
+          # 举例
+          examples << word_explain.content.strip.chomp
+        end
+        @word.example = examples.join("#")
         break
       end
-
-      doc.css(".Head .PronCodes").each do |word_sound|
-        # 音标
-        word.sound = word_sound.content
-        break
-      end
-
-      doc.css(".Sense .DEF").each do |word_explain|
-        # 描述
-        word.explain = word_explain.content
-        break
-      end
-
-      examples = []
-      doc.css(".Sense .EXAMPLE").each do |word_explain|
-        # 举例
-        examples << word_explain.content.strip.chomp
-      end
-      word.example = examples.join("#")
-      break
     end
-    word
+    @word
   end
 
-  def check_is_wrong_word?(doc)
-    is_wrong_word = false
+  def check_word_status(doc)
+    status = :success
     doc.css('.search_title').each do |link|
-      # 如果提示Did you mean:，应该优化为给出一些待选选项
-      is_wrong_word = link.content.start_with?("Sorry, there are no results for") || link.content.start_with?("Did you mean:")
+      status = :not_found if link.content.start_with?("Sorry, there are no results for")
+      status = :guess_other if link.content.start_with?("Did you mean:")
     end
-    is_wrong_word
+    status
   end
 
   def get_ai_message

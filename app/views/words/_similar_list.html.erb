@@ -1,0 +1,8 @@
+<h1 style="margin-bottom: 30px">Do you mean: </h1>
+<ul>
+  <% @similar_words.each do |word| %>
+    <li class="similar_word">
+      <%= button_to word, word_search_path, class: "similar_word-content", method: :post, params: { search: word } %>
+    </li>
+  <% end %>
+</ul>

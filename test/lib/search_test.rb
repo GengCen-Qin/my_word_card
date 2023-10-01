@@ -41,7 +41,16 @@ class SearchTest < Minitest::Test
     content = URI.open('https://www.ldoceonline.com/dictionary/xxx')&.read
     doc = Nokogiri::HTML(content)
     doc.css('.search_title').each do |link|
+      p "结果: #{link.content}"
       assert_equal("Sorry, there are no results for xxx",link.content)
+    end
+  end
+
+  def test_search_similar_word
+    content = URI.open('https://www.ldoceonline.com/dictionary/iphone')&.read
+    doc = Nokogiri::HTML(content)
+    doc.css(".didyoumean li a").each do |word|
+      p "可能得单词有：#{word.content.to_s.strip.chomp}"
     end
   end
 end

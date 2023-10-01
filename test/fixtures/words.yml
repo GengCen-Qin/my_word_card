@@ -1,5 +1,24 @@
 first:
-  name: apple
-  sound: /ˈæpəl/
-  explain: a hard round fruit that has red, light green, or yellow skin and is white inside
-  example: apple pie
+  name: love
+  sound: /lʌv/
+  explain: to have a strong feeling of affection for someone, combined with sexual attraction
+  example: I love you, Tracy.
+  word_sound_link: https://www.ldoceonline.com/media/english/breProns/brelasdelove.mp3?version=1.2.63
+  
+second:
+  name: happy
+  sound: /ˈhæpi/
+  explain: having feelings of pleasure, for example because something good has happened to you or you are very satisfied with your life
+  example: It’s a lovely house and we’ve been very happy here.
+  word_sound_link: https://www.ldoceonline.com/media/english/breProns/ld45happy.mp3?version=1.2.63
+
+third:
+  name: ruby
+  sound: /ˈruːbi/
+  explain: a red jewel
+  example: I LOVE RUBY
+  word_sound_link: https://www.ldoceonline.com/media/english/breProns/ruby0205.mp3?version=1.2.63
+
+
+
+

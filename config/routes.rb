@@ -6,5 +6,5 @@ Rails.application.routes.draw do
 
   post '/word/search', to: 'words#search'
 
-  get '/word/makeMessageByAI', to: "words#makeMessageByAI"
+  get '/word/makeMessageByAI', to: "words#make_message_by_ai"
 end

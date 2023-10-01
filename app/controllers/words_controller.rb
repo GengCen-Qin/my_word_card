@@ -35,9 +35,6 @@ class WordsController < ApplicationController
     @words = Word.ordered
   end
 
-  def show
-  end
-
   def destroy
     set_word
     @word.destroy
@@ -49,7 +46,7 @@ class WordsController < ApplicationController
     end
   end
 
-  def makeMessageByAI
+  def make_message_by_ai
     render plain: get_ai_message
   end
 

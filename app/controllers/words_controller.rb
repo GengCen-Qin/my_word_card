@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
+require 'securerandom'
 require_relative '../exceptions/guess_other_word_error'
 require_relative '../exceptions/not_found_word_error'
 
@@ -11,6 +12,7 @@ class WordsController < ApplicationController
 
     @word = Word.find_by_name(row_word)
     if @word
+      update_session(@word)
       @word.update(updated_at: DateTime.now)
       return respond_to do |format|
         format.turbo_stream { flash.now[:notice] = "移动到顶部啦！！！" }
@@ -20,6 +22,7 @@ class WordsController < ApplicationController
     begin
       @word = do_search(row_word)
       if @word.save
+        update_session(@word)
         respond_to do |format|
           format.turbo_stream { flash.now[:notice] = "单词被成功创建了！！！" }
         end
@@ -48,12 +51,21 @@ class WordsController < ApplicationController
 
   def index
     @similar_words = flash[:similar_words]
-    @words = Word.ordered
+    ids = session[:ids]
+    if ids.nil? || ids.to_a.empty?
+      @words = Word.none
+      session[:ids] = []
+      session[:key] = SecureRandom.random_number
+    else
+      @words = Word.where(id: ids).order(updated_at: :desc)
+    end
   end
 
   def destroy
     set_word
-    @word.destroy
+    ids = session[:ids]
+    ids.delete(@word.id)
+    session[:ids] = ids
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [turbo_stream.remove(@word),
@@ -142,5 +154,12 @@ class WordsController < ApplicationController
       logger.error("openAi request fail: #{e}")
     end
     result
+  end
+
+  def update_session(word)
+    ids = session[:ids]
+    ids.delete(word.id)
+    ids.prepend(word.id)
+    session[:ids] = ids
   end
 end

@@ -1,5 +1,5 @@
 <main class="container" style="overflow-x: hidden">
-  <%= turbo_stream_from "words" %>
+  <%= turbo_stream_from session[:key], "words" %>
 
   <%= turbo_frame_tag "similar_list" %>
 

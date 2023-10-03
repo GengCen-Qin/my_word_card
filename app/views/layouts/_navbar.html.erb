@@ -1,6 +1,6 @@
 <header class="navbar">
   <%= form_tag('/word/search', method: :post, class: 'form') do %>
-    <%= text_field_tag :search, nil, id: 'search', placeholder: 'Search...', autocomplete: 'off', required: true %>
+    <%= text_field_tag :search, nil,class: 'form__input', id: 'search', placeholder: 'Search...', autocomplete: 'off', required: true %>
     <%= button_tag type: :submit, class: 'btn' do %>
       <i class="fas fa-search"></i>
     <% end %>

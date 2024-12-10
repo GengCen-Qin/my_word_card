@@ -5,6 +5,7 @@ require_relative '../exceptions/guess_other_word_error'
 require_relative '../exceptions/not_found_word_error'
 
 class WordsController < ApplicationController
+  include ActionController::Live
   skip_before_action :verify_authenticity_token
 
   def search
@@ -75,7 +76,19 @@ class WordsController < ApplicationController
   end
 
   def make_message_by_ai
-    render plain: get_ai_message
+    response.headers['Content-Type'] = 'text/event-stream'
+    response.headers['Last-Modified'] = Time.now.httpdate
+    sse = SSE.new(response.stream, retry: 300)
+    begin
+      word_names = Word.pluck(:name)
+      prompt = "I hope you can generate a short essay within 100 words, or a dialogue, based on the words I provide below. It should demonstrate how these words are used in everyday sentences. The sentences should be as simple as possible..
+                Words: #{word_names}"
+      OpenAiClient.chat_stream(prompt) do |chunk|
+        sse.write(status: 200, content: chunk)
+      end
+    ensure
+      sse.close
+    end
   end
 
   private
@@ -132,21 +145,6 @@ class WordsController < ApplicationController
       status = :guess_other if link.content.start_with?("Did you mean:")
     end
     status
-  end
-
-  def get_ai_message
-    word_names = Word.pluck(:name)
-    prompt = "I will provide you with a few words and ask you to use them to generate a short, easily understandable article \
-              because I'm curious about how these words are used in real-life situations.. It would be great if the article could \
-              be limited to around 100 words.
-              Words: #{word_names}"
-    begin
-      result = OpenAiClient.chat(prompt)
-    rescue => e
-      logger.error("openAi request fail: #{e}")
-      result = "AI暂时无法访问"
-    end
-    result
   end
 
   def update_session(word)

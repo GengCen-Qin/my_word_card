@@ -11,9 +11,20 @@ module OpenAiClient
       parameters: {
         model: "deepseek-chat",
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.5,
+        temperature: 0.8,
       }
     )
     response.dig("choices", 0, "message", "content")
+  end
+
+  def self.chat_stream(prompt)
+    response = client.chat(parameters: {
+      model: 'deepseek-chat',
+      messages: [{ role: "user", content: prompt }],
+      stream: proc do |chunk, _bytesize|
+        content = chunk.dig("choices", 0, "delta", "content")
+        yield content if content
+      end
+    })
   end
 end

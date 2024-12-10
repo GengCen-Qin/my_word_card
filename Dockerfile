@@ -1,32 +1,86 @@
-# 使用基于Ruby的Docker镜像作为基础镜像
-FROM ruby:3.2.2
+# syntax = docker/dockerfile:1
 
-# 安装所需的系统依赖
-RUN apt-get update \
-    && apt-get install -y sqlite3 libsqlite3-dev redis esbuild \
-    && rm -rf /var/lib/apt/lists/*
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+ARG RUBY_VERSION=3.2.2
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
-# 设置工作目录
-WORKDIR /app
+# 创建 base_for_mainland_china
+FROM base as base_for_mainland_china
+# 换源
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources && \
+    sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources
 
-# 将Gemfile和Gemfile.lock复制到容器中
+# Rails app lives here
+# 代码存放地址，并且设置后续指令的工作目录
+WORKDIR /rails
+
+# Set production environment
+# 设置镜像内的环境变量信息
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development" \
+    RAILS_SERVE_STATIC_FILES=true
+
+# Throw-away build stage to reduce size of final image
+FROM base_for_mainland_china as build
+
+# Install packages needed to build gems and node modules
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential curl git libvips node-gyp pkg-config python-is-python3
+
+# Install JavaScript dependencies
+# js相关依赖
+ARG NODE_VERSION=16.15.1
+ARG YARN_VERSION=1.22.15
+ENV PATH=/usr/local/node/bin:$PATH
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    npm install -g yarn@$YARN_VERSION && \
+    rm -rf /tmp/node-build-master
+
+# Install application gems
+# 下载gem
 COPY Gemfile Gemfile.lock ./
+RUN bundle config mirror.https://rubygems.org https://gems.ruby-china.com/
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
 
-# 安装项目所需的Gem依赖
-RUN gem install bundler \
-    && bundle install --jobs 4 --retry 4
+# Install node modules
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# 将项目所有文件复制到容器中
+# Copy application code
 COPY . .
 
-# 运行数据库迁移
-RUN bundle exec rake db:migrate
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
 
-# 启动Redis服务器并绑定到特定端口
-RUN redis-server --daemonize yes --bind 0.0.0.0 --port 6379
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN ./bin/rails assets:precompile
 
-# 暴露Rails服务器端口
-EXPOSE 3000
 
-# 启动Rails服务器
-CMD redis-server --daemonize yes && bundle exec rails server -b 0.0.0.0
+# Final stage for app image
+FROM base_for_mainland_china
+
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Copy built artifacts: gems, application
+COPY --from=build /usr/local/bundle /usr/local/bundle
+COPY --from=build /rails /rails
+
+# Run and own only the runtime files as a non-root user for security
+RUN useradd rails --create-home --shell /bin/bash && \
+    chown -R rails:rails db log storage tmp
+USER rails:rails
+
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+# Start the server by default, this can be overwritten at runtime
+EXPOSE 4000
+CMD ["./bin/rails", "server"]

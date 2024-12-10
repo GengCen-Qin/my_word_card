@@ -140,18 +140,11 @@ class WordsController < ApplicationController
               because I'm curious about how these words are used in real-life situations.. It would be great if the article could \
               be limited to around 100 words.
               Words: #{word_names}"
-    client = OpenAI::Client.new
-    result = "AI暂时无法访问"
     begin
-      response = client.chat(
-        parameters: {
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.5,
-        })
-      result = response.dig("choices", 0, "message", "content")
+      result = OpenAiClient.chat(prompt)
     rescue => e
       logger.error("openAi request fail: #{e}")
+      result = "AI暂时无法访问"
     end
     result
   end

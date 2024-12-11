@@ -80,11 +80,10 @@ class WordsController < ApplicationController
     response.headers['Last-Modified'] = Time.now.httpdate
     sse = SSE.new(response.stream, retry: 300)
     begin
-      word_names = Word.pluck(:name)
-      prompt = "I hope you can generate a short essay within 100 words, or a dialogue, based on the words I provide below. It should demonstrate how these words are used in everyday sentences. The sentences should be as simple as possible..
-                Words: #{word_names}"
+      prompt = Word.pluck(:name)
+      result = ''
       OpenAiClient.chat_stream(prompt) do |chunk|
-        sse.write(status: 200, content: chunk)
+        sse.write(status: 200, content: result.concat(chunk))
       end
     ensure
       sse.close

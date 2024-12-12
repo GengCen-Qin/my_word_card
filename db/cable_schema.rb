@@ -10,15 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_11_135036) do
-  create_table "words", force: :cascade do |t|
-    t.string "name", null: false
+ActiveRecord::Schema[7.1].define(version: 2024_12_12_120920) do
+  create_table "solid_cable_messages", force: :cascade do |t|
+    t.text "channel"
+    t.text "payload"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "sound"
-    t.string "explain"
-    t.text "example"
-    t.string "word_sound_link"
+    t.index ["channel"], name: "index_solid_cable_messages_on_channel"
+    t.index ["created_at"], name: "index_solid_cable_messages_on_created_at"
   end
 
 end

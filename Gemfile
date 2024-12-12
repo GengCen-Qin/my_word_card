@@ -12,7 +12,7 @@ gem 'nokogiri'
 # 表单
 gem "simple_form", "~> 5.1.0"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails"
+gem "rails", "~> 7.1.0"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -82,3 +82,5 @@ group :test do
   gem "selenium-webdriver"
 
 end
+
+gem "solid_cable", "~> 1.0"
